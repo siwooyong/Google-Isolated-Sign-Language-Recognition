@@ -1,6 +1,6 @@
 # Google-Isolated-Sign-Language-Recognition
 
-**TLDR**<br>
+*TLDR*<br>
 In my experiment, it appears that feature processing had the greatest impact on performance. The final ensemble model consisted of various input features and models, including Transformer, MLP, and GRUs.
 <br><br>
 
