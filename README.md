@@ -4,7 +4,7 @@
 The models used in the competition and the code for data processing are provided by this repository and can be found in the "models" and "data" directories, respectively. The entire training code, including versions for PyTorch and Keras, is available in the "colab" directory. In my experiment, it appears that feature processing had the greatest impact on performance. The final ensemble model consisted of various input features and models, including Transformer, MLP, and GRU.
 <br><br>
 
-## Data processing<br>
+## Data Processing<br>
 Out of the 543 landmarks in the provided raw data, a total of 115 landmarks were used for hands, poses, and lips. Input features were constructed by concatenating xy(z), motion, and distance, resulting in a final input feature size of 1196. Initially, using only the distance feature of hand data was employed, but the significant performance improvement (CV +0.05) was achieved by adding the distance feature of pose and lip data. 
 
     feature = tf.concat([
