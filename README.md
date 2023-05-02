@@ -1,7 +1,7 @@
 # Google-Isolated-Sign-Language-Recognition
 
 ## TLDR<br>
-In my experiment, it appears that feature processing had the greatest impact on performance. The final ensemble model consisted of various input features and models, including Transformer, MLP, and GRUs.
+The models used in the competition and the code for data processing are provided by this repository and can be found in the "models" and "data" directories, respectively. The entire training code, including versions for PyTorch and Keras, is available in the "colab" directory. In my experiment, it appears that feature processing had the greatest impact on performance. The final ensemble model consisted of various input features and models, including Transformer, MLP, and GRU.
 <br><br>
 
 ## Data processing<br>
