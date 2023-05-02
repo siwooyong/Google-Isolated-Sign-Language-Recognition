@@ -1,5 +1,7 @@
 from transformers import RobertaPreLayerNormConfig, RobertaPreLayerNormModel
 
+
+
 # model version 1
 class CustomModelV1(nn.Module):
   def __init__(self, args):
@@ -82,6 +84,8 @@ class CustomModelV1(nn.Module):
 
     x = self.out(x)
     return x
+  
+  
   
 # model version 2
 class CustomModelV2(nn.Module):
@@ -170,6 +174,8 @@ class CustomModelV2(nn.Module):
     x = self.out(x)
     return x
   
+  
+  
 # model version 3
 class CustomModelV3(nn.Module):
   def __init__(self, args):
@@ -246,6 +252,8 @@ class CustomModelV3(nn.Module):
 
     x = self.out(x)
     return x
+  
+  
   
 # model version 4
 class CustomModelV4(nn.Module):
