@@ -21,11 +21,6 @@ class FeatureGenPytorch(nn.Module):
     def forward(self, x):
         x = torch.where(torch.isnan(x), torch.tensor(0.0, dtype=torch.float32), x)
 
-        #lefth_x = x[:, 468:489, :]
-        #righth_x = x[:, 522:, :]
-        #pose_x = x[:, 489:514, :]
-        #lip_x = x[:, self.lip_indices, :]
-
         lefth_x = x[:,40:61,:]
         righth_x = x[:,94:,:]
         pose_x = x[:, 61:86, :]#[:, self.simple_pose]
@@ -124,13 +119,7 @@ class FeatureGenPytorchV2(nn.Module):
         pass
     
     def forward(self, x):
-        x = x[:200]
         x = torch.where(torch.isnan(x), torch.tensor(0.0, dtype=torch.float32), x)
-
-        #lefth_x = x[:, 468:489, :]
-        #righth_x = x[:, 522:, :]
-        #pose_x = x[:, 489:514, :]
-        #lip_x = x[:, self.lip_indices, :]
 
         lefth_x = x[:,40:61,:]
         righth_x = x[:,94:,:]
@@ -151,12 +140,7 @@ class FeatureGenPytorchV2(nn.Module):
         xfeat = torch.cat([xfeat_xcoordi.unsqueeze(2), xfeat_else], dim = -1)
         
         h_x = h_x.reshape(h_x.shape[0], -1) 
-        #indices = (h_x.sum(1) != 0)
-        #if indices.sum() != 0:
-        #    xfeat = xfeat[indices]
         hand_mask = (h_x.sum(1) != 0)
-        if hand_mask.sum()==0:
-          print(0)
         token_type_ids = (h_x.sum(1) != 0) + 1
 
         dxyz = torch.cat([xfeat[:-1] - xfeat[1:], torch.zeros(1, xfeat.shape[1], xfeat.shape[2])], dim = 0)
