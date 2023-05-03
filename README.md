@@ -1,7 +1,8 @@
 # Google-Isolated-Sign-Language-Recognition
 
+
 ## TLDR<br>
-The models used in the competition and the code for data processing are provided by this repository and can be found in the "models" and "data" directories, respectively. The entire training code, including versions for PyTorch and Keras, is available in the "colab" directory. In my experiment, it appears that feature processing had the greatest impact on performance. The final ensemble model consisted of various input features and models, including Transformer, MLP, and GRU.
+The models used in the competition and the code for data processing are provided by this repository and can be found in the "models" and "data" directories, respectively. The entire training code, including versions for PyTorch and Keras, is available in the "colab" directory. Based on my experiment, it seems that the most significant factors contributing to improved performance were regularization and feature processing. The final ensemble model consisted of various input features and models, including Transformer, MLP, and GRU.
 <br><br>
 
 ## Data Processing<br>
@@ -57,18 +58,45 @@ In addition to the Transformer model, simple linear models and GRU models also a
 <br><br>
 
 ## Training<br>
-I utilized an lr_warmup_cosine_decay scheduler with warmup ratio 0.2 and an AdamW optimizer with a weight decay value of 0.01. The total number of epochs was 40, and the learning rate was set to 1e-3. A label smoothing value of 0.65 exhibited the best performance, which might be attributed to the noise in the input that was used.
+
+* Scheduler : lr_warmup_cosine_decay 
+* Warmup Ratio : 0.2 
+* Optimizer : AdamW 
+* Weight Decay : 0.01
+* Epoch : 40
+* Learning Rate : 1e-3 
+* Loss Function : CrossEntropyLoss 
+* Smoothing Value : 0.65 ~ 0.75
+
+<br><br>
+
+## Regularization<br>
+During model training, there are three primary regularization techniques that have made significant contributions to both improving convergence speed and final performance
+
+* Weight normalization applied to the final linear layer([paper](https://arxiv.org/abs/1602.07868))
+    
+        final_layer = torch.nn.utils.weight_norm(nn.Linear(hidden_size, 250))
+
+* Batch normalization applied before the final linear layer
+
+        x = fc_layer(x)
+        x = batchnorm1d(x)
+        x = relu(x)
+        x = dropout(x)
+        x = final_layer(x)
+
+* High weight decay value with the AdamW
 <br><br>
 
 ## TFLite Conversion<br>
 In the early stages of the competition, I worked with PyTorch, which meant I had to deal with numerous errors when converting to TFLite, and ultimately failed to handle dynamic input shapes. In the latter stages of the competition, I began working with Keras, and the number of errors when converting to TFLite was significantly reduced.
 <br><br>
 
-## Didn't work<br>
-1. Adding the distance feature contributed to performance improvement, but adding angle and direction features did not.
-2. Increasing the number of transformer layers did not contribute to performance improvement.
-3. I attempted to model the relationships between landmark points using Transformers or GATs, but the inference speed of the model became slower, and the performance actually decreased.
-4. Pretraining with the data provided in the competition did not improve performance.
+## Didn't Work<br>
+* Adding the distance feature contributed to performance improvement, but adding angle and direction features did not.
+* Increasing the number of transformer layers did not contribute to performance improvement.
+* I attempted to model the relationships between landmark points using Transformers or GATs, but the inference speed of the model became slower, and the performance actually decreased.
+* Bert-like pretraining (MLM) for XYZ coordinates did not improve performance with the provided data in the competition.
 <br><br>
 
 ## Learned<br>
