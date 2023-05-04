@@ -2,7 +2,7 @@
 
 
 ## TLDR<br>
-The models used in the competition and the code for data processing are provided by this repository and can be found in the "models" and "data" directories, respectively. The entire training code, including versions for PyTorch and Keras, is available in the "colab" directory. Based on my experiment, it seems that the most significant factors contributing to improved performance were regularization and feature processing. The final ensemble model consisted of various input features and models, including Transformer, MLP, and GRU.
+The models used in the competition and the code for data processing are provided by this repository and can be found in the "models" and "data" directories, respectively. The entire training code, including versions for PyTorch and Keras, is available in the "colab" directory. Based on my experiment, it seems that the most significant factors contributing to improved performance were **regularization**, **feature processing** and **embedding_layer**. The final ensemble model consisted of various input features and models, including Transformer, MLP, and GRU.
 <br><br>
 
 ## Data Processing<br>
@@ -42,6 +42,22 @@ I did not observe that flip, rotate, mixup, and other augmentation techniques co
 <br><br>
 
 ## Model<br>
+Prior to being utilized as inputs for the transformer model, the input features, namely xy(z), motion, and distance, underwent individual processing through dedicated embedding layers. Compared to the scenario where features were not processed independently, a performance improvement of 0.01 was observed in the CV score when the features were treated independently.
+    
+    # embedding layer
+    xy = xy_embeddings(xy)
+    motion = motion_embeddings(motion)
+    distance_hand = distance_hand_embeddings(distance_hand)
+    distance_pose = distance_pose_embeddings(distance_pose)
+    distance_outlip = distance_outlip_embeddings(distance_outlip)
+    distance_inlip = distance_inlip_embeddings(distance_inlip)
+
+    x = tf.concat([xy, motion, distance_hand, distance_pose, distance_outlip, distance_inlip], axis=-1)
+    x = relu(x)
+    x = fc_layer(x)
+    x = TransformerModel(input_ids = None, inputs_embeds=x, attention_mask=x_mask).last_hidden_state
+<br>
+
 For Transformer models, I used huggingface's RoBERTa-PreLayerNorm, DeBERTaV2, and GPT2. The input was processed independently for xyz, motion, and distance, and then concatenated to form a 300-dimensional transformer input. The mean, max, and std values of the Transformer output were then concatenated to obtain the final output.
 
     def get_pool(self, x, x_mask):
